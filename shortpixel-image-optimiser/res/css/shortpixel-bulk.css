@@ -218,7 +218,7 @@
 .wrap.is-shortpixel-bulk-page section.panel.dashboard {
   max-width: 95%;
   margin: 20px auto;
-  border-radius: 16px 16px 0px 0px;
+  border-radius: 16px;
 }
 .wrap.is-shortpixel-bulk-page section.panel.dashboard h3.heading {
   border: 0;
@@ -271,7 +271,12 @@
 }
 .wrap.is-shortpixel-bulk-page section.panel.dashboard .dashboard-text {
   margin: 0 auto;
-  width: 50%;
+  width: 600px;
+}
+@media (max-width: 768px) {
+  .wrap.is-shortpixel-bulk-page section.panel.dashboard .dashboard-text {
+    width: 90%;
+  }
 }
 .wrap.is-shortpixel-bulk-page section.panel.dashboard .dashboard-text p {
   line-height: 25px;
@@ -460,6 +465,9 @@
 .wrap.is-shortpixel-bulk-page .bulk-modal .content .table-wrapper > div > span {
   display: table-cell;
   padding: 4px 8px;
+}
+.wrap.is-shortpixel-bulk-page .bulk-modal .content .table-wrapper > div > span:first-child {
+  white-space: nowrap;
 }
 .wrap.is-shortpixel-bulk-page .bulk-modal .content a {
   text-decoration: none;

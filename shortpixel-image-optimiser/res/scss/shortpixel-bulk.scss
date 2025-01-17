@@ -8,6 +8,7 @@
 	@import 'elements/colors';
 	@import 'elements/animation';
 	@import 'elements/mixins';
+        @import 'elements/breakpoints';
 	@import 'elements/header';
 	@import 'elements/icons';
 
@@ -191,6 +192,9 @@
 					 > div > span {
 						 	display: table-cell;
 							padding: 4px 8px;
+							&:first-child {
+								 white-space: nowrap;
+							}
 						}
 				 }
 				 a { text-decoration: none; margin-left: 8px;}

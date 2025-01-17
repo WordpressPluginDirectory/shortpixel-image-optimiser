@@ -143,7 +143,6 @@ class OtherMediaController extends \ShortPixel\Controller
        if (! is_null(self::$hasCustomImages)) // prevent repeat
          return self::$hasCustomImages;
 
- Log::addTrace("Has Custom Images function called");
 			if (InstallHelper::checkTableExists('shortpixel_meta') === false)
 				$count = 0;
 			else
@@ -464,19 +463,6 @@ class OtherMediaController extends \ShortPixel\Controller
       if( $dirObj->exists() ) {
 
           $subdirs = $fs->sortFiles($dirObj->getSubDirectories()); // runs through FS sort.
-
-
-        /*  foreach($subdirs as $index => $dir) // weed out the media library subdirectories.
-          {
-             $dirname = $dir->getName();
-          //   $status = $this->checkifMediaLibrary($dir);
-
-						// @todo This should probably be checked via getBackupDirectory or so, not hardcoded ShortipxelBackups
-            if($dirname == 'ShortpixelBackups' || $this->checkifMediaLibrary($dir) )
-            {
-              // unset($subdirs[$index]);
-            }
-          } */
 
           if( count($subdirs) > 0 ) {
               $i = 0;
