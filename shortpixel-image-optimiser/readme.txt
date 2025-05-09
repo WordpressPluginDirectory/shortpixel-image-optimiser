@@ -2,9 +2,9 @@
 Contributors: ShortPixel
 Tags: convert webp, optimize images, image optimization, resize, compress images
 Requires at least: 4.8.0
-Tested up to: 6.7
+Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 6.1.3
+Stable tag: 6.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,9 +12,9 @@ Optimize images & PDFs smartly. Create and compress next-gen WebP and AVIF forma
 
 == Description ==
 
-###The Ultimate Image Optimization Plugin for WordPress###
+###🚀 The Ultimate Image Optimization Plugin for WordPress###
 
-**Boost your site’s speed instantly! Optimize images and PDFs with one click, bulk compress to WebP and AVIF, use lazy loading, and resize images.**
+**⚡ Boost your site’s speed instantly! Optimize images and PDFs with one click, bulk compress to WebP and AVIF, use lazy loading, and resize images.**
 
 Increase your website's SEO ranking, number of visitors, and ultimately your sales by optimising any image or PDF document on your website.
 
@@ -22,23 +22,27 @@ The <a href="https://shortpixel.com" target="_blank">ShortPixel</a> plugin is a 
 It is designed to work with any website type, whether it's a small blog or a large WooCommerce-powered online store with tens of thousands of products.
 Additionally, it's an excellent choice for agencies, offering unlimited image optimization credits for a flat monthly fee.
 
-= Ready for a Quick DEMO of our Top Image Optimization Tool? = 
+= 🎬 Ready for a Quick DEMO of our Top Image Optimization Tool? =
 Test our plugin <a href="https://demo.tastewp.com/shortpixel-image-optimiser" target="_blank">here</a>.
 Make an instant <a href="https://shortpixel.com/image-compression-test" target="_blank">image compression test</a> of your site or <a href="https://shortpixel.com/online-image-compression" target="_blank">compress some images</a> to test our optimization algorithms.
 
-== Why is ShortPixel the best choice for image optimization or PDF compression? ==
+== 💡 Why is ShortPixel the best choice for image optimization or PDF compression? ==
 
-### New! Prevent AI Data Mining ###
+### 🆕 New! Freshly added features ###
 
-Decide whether AI bots can use your images for machine learning (ML) training, or block them entirely.
+* Compress WebP images – ShortPixel now also <a href="https://shortpixel.com/blog/introducing-smartcompress/" target="_blank">smartly compresses</a> all your existing WebP images.
+* Image captioning – Using our AI model, you can automatically add "alternative text" to your images (BETA).
+* Added support for serving CSS and JS from our global CDN.
+* Save & Restore option for all settings – ideal for agencies and users managing multiple websites.
+* Decide whether AI bots can use your images for machine learning (ML) training, or <a href="https://shortpixel.com/blog/prevent-ai-data-mining-on-images/" target="_blank">block them entirely</a>.
 
-### Faster Websites for Global Audiences ###
+### 🌍 Faster Websites for Global Audiences ###
 
 The ShortPixel plugin now includes a built-in global Content Delivery Network (CDN). This powerful feature ensures that ShortPixel-optimized WebP and AVIF images are delivered quickly and efficiently to any location worldwide, minimizing delays and improving load times.
 
 By leveraging this built-in solution, you enhance the user experience, reduce server strain, boost SEO performance, and simplify website management — all with minimal effort.
 
-### Resize and Compress Images Without Losing Quality ###
+### 📸 Resize and Compress Images Without Losing Quality ###
 
 * Popular plugin with over 300,000 active installations – according to WordPress
 * Compress JPG (and its variations: JPEG, JPEG 2000, JPEG XR), PNG, GIF (still or animated) images, and also PDF documents.
@@ -46,26 +50,27 @@ By leveraging this built-in solution, you enhance the user experience, reduce se
 * CMYK to RGB conversion.
 * Progressive JPEG is used whenever it leads to a smaller image.
 
-### Lossy and Lossless image compression ###
+### 🌟 Lossy and Lossless image compression ###
 
 Both **Lossy and Lossless image compression** are available for the most common image types (JPG, PNG, GIF, WebP, and AVIF) plus PDF files.
 We also offer **Glossy** JPEG compression which is a very high-quality lossy optimization algorithm. Especially designed for photographers or for high-quality product pictures.
 Optimized images lead to a better user experience, improved PageSpeed Insights or GTmetrix results, higher Google PageRank, and more visitors.
 
-### Convert WebP and AVIF Formats ###
+### 🔄 Convert WebP and AVIF Formats ###
 
 * Option to automatically convert JPEG, PNG, or GIF to WebP and AVIF for better performance and improved Google ranking.
+* Automatically optimize your existing WebP files with ShortPixel's SmartCompress algorithm.
 * Animated GIFs can be automatically converted to much smaller animated WebP or AVIF files.
 * Option to include next-gen images (WebP and AVIF) in front-end pages with a single click using the <picture> tag.
 
-### Bulk Image Optimization and Background Image Processing ###
+### 📦 Bulk Image Optimization and Background Image Processing ###
 
 * New! With 'Background mode,' images can now be optimized without needing to keep a browser tab open.
 * Easily add recurring cron jobs for background optimization, ideal for sites where users upload images via the front end.
 * Bulk-optimize all images in the Media Library or any gallery with a single click.
 * Full WP-CLI support for background processing, especially useful for large Media Libraries.
 
-### Performance and Automatic Image Optimization ###
+### 🔥 Performance and Automatic Image Optimization ###
 
 ShortPixel uses minimal resources and works well with any shared, cloud, VPS, or dedicated web hosting. It can optimize any image on your website, including those not listed in the Media Library, such as images in galleries or those added directly via FTP.
 All optimization is performed using ShortPixel's Image Optimization Cloud, so your hosting resources remain unaffected.
@@ -73,7 +78,7 @@ All optimization is performed using ShortPixel's Image Optimization Cloud, so yo
 * New! Automatic scan of Custom media folders for new images using cron jobs.
 * Skip already optimized images to avoid redundant processing.
 
-### Compatibility with Popular Themes, Page Builders, and Media Library Plugins ###
+### 🎨 Compatibility with Popular Themes, Page Builders, and Media Library Plugins ###
 
 * Works great for eCommerce websites using WooCommerce and other plugins.
 * Compatible with NextGEN Gallery, Modula, Foo Gallery, and other galleries or sliders.
@@ -90,7 +95,7 @@ All optimization is performed using ShortPixel's Image Optimization Cloud, so yo
 With ShortPixel, you can now add images in Apple's HEIC format directly from your iPhone. They will be automatically converted to JPG and optimized according to your settings. Easy!
  <a href="https://shortpixel.com/knowledge-base/article/heic-apple-images-support-in-shortpixel-image-optimizer/" target="_blank">Read more</a>.
 
-### Advanced Image Optimization Features ###
+### 🔧 Advanced Image Optimization Features ###
 
 * NEW Smart Cropping: Generate <a href="https://shortpixel.com/knowledge-base/article/what-is-smart-cropping/">subject-centered</a> thumbnails using AI, ideal for eCommerce websites.
 * Optimize thumbnails and featured images, with options to exclude individual thumbnails from optimization.
@@ -102,30 +107,30 @@ With ShortPixel, you can now add images in Apple's HEIC format directly from you
 * Easily test lossy, glossy, or lossless versions of images with a single click in the Media Library.
 * 100MB filesize limit
 
-### Backup and Safety ###
+### 🛡️ Backup and Safety ###
 
 * Safe to test and use: original images are backed up locally and can be restored with a single click (either individually or in bulk).
 * No credits are used for images optimized by less than 5%
 
-### Reporting, Analytics, Compliance and Customer Support ###
+### 📊 Reporting, Analytics, Compliance and Customer Support ###
 
 * 30-day optimization report with detailed image statistics and overall site performance improvements.
 * 24/7 stellar support.
 * We are fully GDPR compliant.
 
-**<a href="https://shortpixel.com/pricing" target="_blank">New Plan: ShortPixel Unlimited</a>**
+**🚀 <a href="https://shortpixel.com/pricing" target="_blank">New Plan: ShortPixel Unlimited</a>**
 This is the ideal monthly plan for web agencies or website owners with multiple sites and frequent image uploads.
 It allows you to optimize an unlimited number of images with ShortPixel Image Optimizer or use <a href=”https://wordpress.org/plugins/shortpixel-adaptive-images/”>ShortPixel Adaptive Images</a> without worrying about CDN traffic limits.
 Read more details on our <a href="https://shortpixel.com/knowledge-base/article/how-does-the-unlimited-plan-work/" target="_blank">dedicated page</a>.
 
 * **free optimization credits for non-profits**, <a href="https://shortpixel.com/contact" target="_blank">contact us</a> for details
 
-**How much does it cost?**
+**💸 How much does it cost?**
 ShortPixel comes with 100 free credits per month, and additional unlimited monthly credits can be purchased for $9.99.
 One-time credit packages that never expire are available starting at $19.99.
 Check out <a href="https://shortpixel.com/pricing" target="_blank">our prices</a>.
 
-> **Testimonials:**
+> **🌟 Testimonials:**
 > ★★★★★ **A Super Plugin works very well 62% reduction overall.** [robertvarns](https://wordpress.org/support/topic/a-super-plugin-works-very-well-62-reduction-overall/)
 > ★★★★★ **The secret sauce for a WordPress website.**  [mark1mark](https://wordpress.org/support/topic/the-secret-sauce-for-a-wordpress-website/)
 > ★★★★★ **A must have plugin, great support!** [ElColo13](https://wordpress.org/support/topic/a-must-have-plugin-great-support/)
@@ -137,7 +142,7 @@ Check out <a href="https://shortpixel.com/pricing" target="_blank">our prices</a
 
 Help us spread the word by recommending ShortPixel to your friends and collect **100 lifetime monthly additional image credits for each referred active user**. Make money by promoting a great plugin with our <a href="https://shortpixel.com/free-sign-up-affiliate" target="_blank">30% commission affiliate program</a>.
 
-**Other plugins by ShortPixel**
+**🛠️ Other plugins by ShortPixel**
 
 * [FastPixel Caching](https://wordpress.org/plugins/fastpixel-website-accelerator/) - WP Optimization made easy
 * [ShortPixel Adaptive Images](https://wordpress.org/plugins/shortpixel-adaptive-images/) - On-the-fly image optimization & CDN delivery
@@ -147,7 +152,7 @@ Help us spread the word by recommending ShortPixel to your friends and collect *
 * [WP SVG Images](https://wordpress.org/plugins/wp-svg-images/) - Secure upload of SVG files to Media Library 
 * [ShortPixel Critical CSS](https://wordpress.org/plugins/shortpixel-critical-css/) - Automatically generate above-the-fold CSS for fatster loading times and better SEO scores
 
-**Get in touch!**
+**📩 Get in touch!**
 
 * Email <a href="https://shortpixel.com/contact" target="_blank">https://shortpixel.com/contact</a>
 * Twitter <a href="https://twitter.com/shortpixel" target="_blank">https://twitter.com/shortpixel</a>
@@ -314,7 +319,7 @@ To optimize images for performance in WordPress, use the ShortPixel plugin to co
 
 == Actions and Filters for Developers ==
 
-The ShortPixel Image Optimiser plugin calls the following actions and filters:
+The ShortPixel Image Optimizer plugin calls the following actions and filters:
 
 `do_action( 'shortpixel_image_optimised', $post_id );`
 upon successful optimization;
@@ -428,23 +433,85 @@ Add HTTP basic authentication credentials by defining these constants in wp-conf
 
 == Screenshots ==
 
-1. Bulk optimization running. (Media>Bulk ShortPixel)
+1. Select bulk optimization options. (Media -> Bulk ShortPixel)
 
-2. Activate your API key in the plugin Settings. (Settings>ShortPixel)
+2. Bulk optimization running. (Media -> Bulk ShortPixel)
 
-3. Check out the main settings after the API key is activated. (Settings>ShortPixel)
+3. Activate your API key in the plugin Settings. (Settings -> ShortPixel)
 
-4. Tweak it using Advanced settings. (Settings>ShortPixel)
+4. Plugin dashboard after entering the API key. (Settings -> ShortPixel)
 
-5. Compress all your past images with one click. (Media>Bulk ShortPixel)
+5. Image Optimization settings. (Settings -> ShortPixel -> Image Optimization)
 
-6. Check image optimization status, and restore or reoptimize the image. (Media>Library)
+6. Exclusion settings. (Settings -> ShortPixel -> Exclusions)
 
-7. Check image optimisation details. (Media>Library->Edit)
+7. Processing settings. (Settings -> ShortPixel -> Processing)
 
-8. Check other optimized images' status - themes or other plugins' images. (Media>Other Media)
+8. Next generation and delivery settings. (Settings -> ShortPixel -> WebP/AVIF and CDN)
+
+9. Integrations. (Settings -> ShortPixel -> Integrations)
+
+10. Tools. (Settings -> ShortPixel -> Tools)
+
+11. Help Center. (Settings -> ShortPixel -> Help Center)
+
+12. Check image optimization status, and restore or reoptimize the image. (Media -> Library)
+
+13. Check image optimisation details. (Media -> Library -> Edit)
+
+14. Check other optimized images' status - themes or other plugins' images. (Media>Other Media)
 
 == Changelog ==
+
+= 6.2.0 =
+
+🚀 The Power Tools Update
+
+🌟 New Features
+
+- Smart WebP Compression: ShortPixel now compresses your existing WebP images to save even more space without sacrificing quality.
+- AI-Powered Image Captioning (BETA): Automatically generate meaningful “*alternative text(ALT)”* for your images using our AI model—great for SEO and accessibility!
+- Global CDN for CSS & JS: Your CSS, JS, and even background images can now be served via ShortPixel's global CDN for faster page loads.
+- CDN Cache Purge Controls: New buttons to purge cached CSS, JS, or the entire CDN cache with one click—right from your dashboard.
+- Save & Restore Settings: Export and import all settings effortlessly — ideal for agencies managing multiple sites.
+
+⚙️ Improvements
+
+- Cross-Tab Sync: Optimizations done in multiple browser tabs now stay in sync using browser broadcasting.
+- Automatic Association to ShortPixel Account: Your site domain is now automatically associated to your ShortPixel account when enabling CDN delivery.
+- CDN Domain Validation: Prevent misconfigurations with smart validation of your CDN domain format.
+- Cleaner Admin Bar: The ShortPixel icon is now hidden when restoring items to keep your admin interface tidy.
+- CDN Bypass Option: Append `?PageSpeed=off` to disable CDN replacement for debugging or testing.
+- WebP Limit Handling: Files that exceed WebP conversion limits are now properly managed to avoid errors.
+
+🛠️ Fixes
+
+- Lossless Labeling Bug: Fixed an issue where images were incorrectly marked as "Lossless" if the main image wasn't optimized.
+- Sticky Notification: Resolved an issue where the API key notification couldn't be dismissed after saving it from settings.
+- Folder Creation Fix: The plugin no longer attempts to create month-based folders—it now leaves that job to WordPress.
+- File Format Conversions: Improved support for HEIC, TIFF, and BMP file conversion.
+- API Key Onboarding Fix: Pressing *Enter* now correctly saves your API key during onboarding.
+
+🌍 Language Updates
+
+* Added 87 new strings, updated 2, and deprecated 28 to enhance global translation support.
+
+Update now for faster speeds, smarter automation, and more control than ever! 🚀
+
+= 6.1.4 =
+
+🔧 The Clarity & Stability Update
+
+Release Date: March 27, 2025
+
+🛠️ Fixes & Improvements
+
+* Quota Limit Message: Clearer messaging is now shown on the bulk processing screen when you're out of optimization quota.
+* Admin Notice Styling: Fixed visual issues with some admin notifications that weren’t styled correctly in wp-admin.
+* Duplicate Image Requests: Resolved an issue where some background images caused doubled image requests when using the PICTURE tag for next-gen formats.
+* Redirect Loop Prevention: Added a fail-safe mechanism to avoid potential redirect loops in wp-admin if `register_shutdown_function` fails.
+
+Update now for a cleaner, more stable, and user-friendly experience! 🚀
 
 = 6.1.3 =
 
