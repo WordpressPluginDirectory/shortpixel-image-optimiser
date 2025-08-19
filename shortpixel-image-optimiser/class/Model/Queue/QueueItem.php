@@ -20,17 +20,15 @@ use ShortPixel\Controller\Optimizer\ActionController as ActionController;
 class QueueItem
 {
 
-   protected $imageModel;
-   protected $item_id;
-   //  protected $action = 'optimize'; // This must be in data!
+   protected $imageModel; // ImageModel 
+   protected $item_id; // Item Id 
    protected $queueItem; // Object coming from WPQ
 
-   protected $result;
+   protected $result; // Result object stores a viable customer response.
 
    protected $data; // something savable to dbase, for now object. This is the only thing persistent!
 
    protected $item_count; // counted images for the table.
-
 
    protected $debug_active = false; // prevent operations when it's debug view in edit media
 
@@ -177,7 +175,17 @@ class QueueItem
          $media_id = $this->imageModel->getParent();
       }
 
-      return ['id' => $item_id, 'value' => $value, 'item_count' => $this->item_count];
+
+      $enqueue = ['id' => $item_id, 'value' => $value, 'item_count' => $this->item_count];
+      
+      if (! is_null($this->data->queue_list_order))
+      {
+         $enqueue['order'] = $this->data->queue_list_order;
+      }
+
+      return $enqueue; 
+
+      
    }
 
    public function setDebug()
@@ -215,7 +223,7 @@ class QueueItem
 
        $this->data->action = 'reoptimize'; 
        $this->data->next_actions = ['optimize'];
-       $this->data->next_keepdata = ['compressionType', 'smartcrop']; // Each action it's own set of keep data.
+       $this->data->addKeepDataArgs(['compressionType', 'smartcrop']); // Each action it's own set of keep data.
        $this->item_count = 1;
 
        // Smartcrop setting (?) 
@@ -261,9 +269,10 @@ class QueueItem
          'queueType', // OptimizeController but (?) usage
          'kblink',
          'data', // Is returnDataList returned by apiController. (array)
-         'retrievedText', // Ai text returning from AIController 
+    //     'retrievedText', // Ai text returning from AIController  //  @todo Can probably be removed on release. 
          'apiName', // NAme of the handling api, for JS / Response to show different results.
          'remote_id', 
+         'aiData',   // Returning AI Data
 
       ];
 
@@ -283,6 +292,7 @@ class QueueItem
 
    }
 
+
    /** Clean several aspects of this object ( result, other things ) before triggering a new action. 
     * 
     * Since QItem is mostly passed by reference 
@@ -292,7 +302,7 @@ class QueueItem
    {
        $this->result = new \stdClass; // new action, new results 
 
-       if ($this->data->hasNextAction()) // Keep this at all times / not optimal still
+       if ($this->data()->hasNextAction()) // Keep this at all times / not optimal still
        {
           $nextActions = $this->data()->next_actions; 
        } 
@@ -323,6 +333,10 @@ class QueueItem
 
    }
 
+   /** Action for dunping (removing from cache) for image URLS's so optimization will be redone.
+    * 
+    * @return void 
+    */
    public function newDumpAction()
    {
       $this->newAction(); 
@@ -334,11 +348,17 @@ class QueueItem
 
    }
 
+   /** Start optimize action 
+    * 
+    * @param array $args  Arguments and settings
+    * @return void 
+    */
    public function newOptimizeAction($args = [])
    {
       $this->newAction(); 
 
       $imageModel = $this->imageModel;
+      $item_id = $imageModel->get('id');
 
       /*  $defaults = array(
             'debug_active' => false, // prevent write actions if called via debugger
@@ -409,6 +429,12 @@ class QueueItem
             $convertTo = implode('|', $convertTo);
             $optimizeData['params'][$sizeName]['convertto'] = $convertTo;
          }
+
+         if (isset($param['url']))
+         {
+            $url = $this->timestampURLS([$param['url']], $item_id);
+            $optimizeData['params'][$sizeName]['url'] = $url[0];
+         }
       }
 
       // CompressionType can be integer, but not empty string. In cases empty string might happen, causing lossless optimization, which is not correct.
@@ -418,7 +444,7 @@ class QueueItem
 
       // Former securi function, add timestamp to all URLS, for cache busting.
       $urls = $this->timestampURLS(array_values($urls), $imageModel->get('id'));
-      $this->data->urls = apply_filters('shortpixel_image_urls', $urls, $imageModel->get('id'));
+      $this->data->urls = apply_filters('shortpixel_image_urls', $urls, $item_id);
 
       if (count($optimizeData['params']) > 0) {
          $this->data->paramlist = array_values($optimizeData['params']);
@@ -438,14 +464,40 @@ class QueueItem
 
    }
 
-   public function requestAltAction()
-   {
+   public function requestAltAction($args = [])
+   {   
       $this->newAction(); 
       $this->data->url = $this->imageModel->getUrl();
       $this->data->tries = 0;
       $this->item_count = 1;
 
+
+      $preview_only = false; 
+      if (isset($args['preview_only']) && true == $args['preview_only'])
+      {
+         $this->data->paramlist = ['preview_only' => true];
+         $preview_only = true; 
+      } 
+
       $this->data->action = 'requestAlt'; // For Queue
+
+      $optimizer = $this->getAPIController($this->data->action); 
+      $optimizer->parseJSONForQItem($this, $args);
+
+      if ($this->data()->hasNextAction())
+      {
+          $next_actions = array_merge(['retrieveAlt'], $this->data()->next_actions);
+      }
+      else
+      {
+         $next_actions = ['retrieveAlt'];
+      }
+      
+      if (false === $preview_only)
+      {
+         $this->data->next_actions = $next_actions;
+      }
+      
    }
 
    public function retrieveAltAction($remote_id)
@@ -494,11 +546,19 @@ class QueueItem
 
       return $api;
    }
-
+   
+   /**
+    * Add a timestamp to the URL for cache-prevention.
+    *
+    * @param array $urls  URL's to timestamp 
+    * @param int $id  Item_id to get post time for this.
+    * @return array
+    */
    protected function timestampURLS($urls, $id)
    {
       // https://developer.wordpress.org/reference/functions/get_post_modified_time/
       $time = get_post_modified_time('U', false, $id);
+
       foreach ($urls as $index => $url) {
          $urls[$index] = add_query_arg('ver', $time, $url); //has url
       }
@@ -506,7 +566,7 @@ class QueueItem
       return $urls;
    }
 
-
+   
    public function checkImageModelExists()
    {
       if (is_null($this->imageModel) || false === is_object($this->imageModel)) {

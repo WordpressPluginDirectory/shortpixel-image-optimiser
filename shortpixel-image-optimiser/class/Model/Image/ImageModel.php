@@ -211,6 +211,7 @@ abstract class ImageModel extends \ShortPixel\Model\File\FileModel
 					{
             $this->processable_status = self::P_DIRECTORY_NOTWRITABLE;
 					}
+
           return false;
         }
         else
@@ -218,6 +219,7 @@ abstract class ImageModel extends \ShortPixel\Model\File\FileModel
 					$this->processable_status = self::P_PROCESSABLE;
           return true;
 				}
+
     }
 
     public function isProcessableFileType($type = 'webp')
@@ -351,7 +353,7 @@ abstract class ImageModel extends \ShortPixel\Model\File\FileModel
             $message = __('Image is already optimized', 'shortpixel-image-optimiser');
          break;
          case self::P_FILE_NOTWRITABLE:
-            $message = sprintf(__('Image %s is not writable in %s', 'shortpixel-image-optimiser'), $this->getFileName(), (string) $this->getFileDir());
+            $message = sprintf(__('Image %s (or related thumbnails) is not writable in %s', 'shortpixel-image-optimiser'), $this->getFileName(), (string) $this->getFileDir());
          break;
 				 case self::P_DIRECTORY_NOTWRITABLE:
 						$message = sprintf(__('Image directory %s is not writable', 'shortpixel-image-optimiser'), (string) $this->getFileDir());
@@ -651,7 +653,7 @@ abstract class ImageModel extends \ShortPixel\Model\File\FileModel
 
         }
         else
-          return 0;
+          return false;
     }
 
 

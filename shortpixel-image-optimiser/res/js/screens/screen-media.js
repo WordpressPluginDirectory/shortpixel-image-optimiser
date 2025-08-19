@@ -12,11 +12,25 @@ class ShortPixelScreen extends ShortPixelScreenItemBase //= function (MainScreen
 		'attachment-details-two-column-alt-text',
 	
 	 ];
+	 ai_enabled = true; 
+	 gutenCheck = []; 
+
 
 	Init() {
 		super.Init();
-		this.ListenGallery();
+		
+		let settings = spio_mediascreen_settings;
+		this.settings = settings;
 
+		this.ListenGallery();
+		this.ListenGutenberg();
+
+
+		if (typeof settings.hide_ai !== 'undefined')
+		{
+			this.ai_enabled = ! settings.hide_ai;
+		}
+		
 		// bind DoAction, for bulk actions in Media Libbrary to event
 		var actionEl = document.getElementById('doaction');
 		if (actionEl !== null)
@@ -37,8 +51,12 @@ class ShortPixelScreen extends ShortPixelScreenItemBase //= function (MainScreen
 		 ]; */
 	}
 
-	FetchAltView(newAltText, item_id)
+	FetchAltView(aiData, item_id)
 	{
+		if (false == this.ai_enabled)
+		{
+			 return;
+		}
 		var attachmentAlt = this.GetPageAttachmentAlt();
 		if (null === attachmentAlt) // No attach alt around
 		{
@@ -50,6 +68,12 @@ class ShortPixelScreen extends ShortPixelScreenItemBase //= function (MainScreen
 			return; 
 		}
 
+		if (typeof aiData !== 'undefined')
+		{
+			var newAltText = aiData.alt; 
+			var newCaption = aiData.caption;
+			var newDescription = aiData.description;
+		}
 
 		if (typeof newAltText !== 'undefined')
 		{
@@ -81,6 +105,25 @@ class ShortPixelScreen extends ShortPixelScreenItemBase //= function (MainScreen
 		// edit media screen
 		 // = document.getElementById('attachment_alt'); 
 
+		 if (typeof newCaption !== 'undefined')
+		 {
+			let captionField = document.getElementById('attachment_caption'); 
+			if (null !== captionField)
+			{
+				captionField.value = newCaption; 
+			}
+				
+		 }
+
+		 if (typeof newDescription !== 'undefined')
+		 {
+			let descriptionField = document.getElementById('attachment_content');
+			if (null !== descriptionField)
+			{
+				 descriptionField.value = newDescription; 
+			}
+		 }
+
 
 		if (null !== attachmentAlt)
 		{
@@ -100,7 +143,12 @@ class ShortPixelScreen extends ShortPixelScreenItemBase //= function (MainScreen
 
 			window.addEventListener('shortpixel.AttachAiInterface', this.AttachAiInterface.bind(this), {once: true});
 		}
-		 
+	/*	if (typeof aiData !== 'undefined')
+		{
+			this.processor.LoadItemView({ id: item_id, type: 'media' });
+		} */
+
+
 	}
 
 	GetPageAttachmentAlt()
@@ -153,6 +201,7 @@ class ShortPixelScreen extends ShortPixelScreenItemBase //= function (MainScreen
 				var column = document.getElementById('shortpixel-data-' + media_id);
 				var optimizable = column.classList.contains('is-optimizable');
 				var restorable = column.classList.contains('is-restorable');
+				var aiAction = column.classList.contains('ai-action');
 
 				var compressionType = column.dataset.compression;
 
@@ -205,11 +254,16 @@ class ShortPixelScreen extends ShortPixelScreenItemBase //= function (MainScreen
 						}
 						break;
 					case 'shortpixel-mark-completed':
-						{
 							if (optimizable) {
 								this.MarkCompleted(media_id);
 							}
+					break; 
+					case 'shortpixel-generateai':
+						if (aiAction)
+						{
+							 this.RequestAlt(media_id);
 						}
+					break; 
 				}
 				items[i].checked = false;
 
@@ -255,6 +309,12 @@ class ShortPixelScreen extends ShortPixelScreenItemBase //= function (MainScreen
 
 	ListenGallery() {
 		var self = this;
+
+		if (this.settings.hide_spio_in_popups)
+		{
+			return;
+		}
+
 		if (typeof wp.media === 'undefined') {
 			this.ListenEditAttachment(); // Edit Media edit attachment screen
 			return;
@@ -463,4 +523,50 @@ class ShortPixelScreen extends ShortPixelScreenItemBase //= function (MainScreen
 		});
 	}
 
+	ListenGutenberg()
+	{
+
+		var self = this; 
+
+		if (typeof wp.data == 'undefined')
+		{
+			return;
+		}
+
+		wp.data.subscribe(() => {
+			//const { getMedia } = wp.data.select('core');
+			const { getSelectedBlock } = wp.data.select('core/block-editor');
+		
+			const block = getSelectedBlock();
+			
+			if (block && block.name === 'core/image') {
+				const imageId = block.attributes.id; // Get the image ID
+				//const imageUrl = block.attributes.url; // Get the image URL
+		
+				if (imageId) {
+		
+					if (self.gutenCheck.indexOf(imageId) === -1)
+					{
+						
+						window.ShortPixelProcessor.SetInterval(-1);
+						window.ShortPixelProcessor.RunProcess();
+						
+						self.gutenCheck.push(imageId);
+					}
+					else
+					{
+						
+					}
+		
+				}
+			}
+		});
+	}
+
 } // class
+
+
+
+
+
+

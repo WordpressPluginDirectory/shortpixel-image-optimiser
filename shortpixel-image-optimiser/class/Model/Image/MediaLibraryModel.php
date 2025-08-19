@@ -289,19 +289,102 @@ class MediaLibraryModel extends \ShortPixel\Model\Image\MediaLibraryThumbnailMod
 		return $url;
 	}
 
+
+	public function getImageKey($key = 'main')
+	{
+		 if ('main' == $key)
+		 {
+			 return $this->mainImageKey;
+		 }
+		 if ('original' == $key)
+		 {
+			 return $this->originalImageKey;
+		 }
+	}
 	/** Return all urls of item.  This should -not- be used for optimization. Use getOptimizeUrls(). In use for cache
 	 */
 	public function getAllUrls()
 	{
 		$urls = array();
-		$urls[] = $this->getUrl();
+		$urls[$this->mainImageKey] = $this->getUrl();
 
-		$thumbs = $this->getThumbObjects();
-		foreach ($thumbs as $thumbObj) {
-			$urls[] = $thumbObj->getUrl();
+
+		if ($this->isScaled())
+		{
+			 $urls[$this->originalImageKey]  = $this->getOriginalFile()->getUrl();
 		}
 
-		return $urls;
+		$thumbs = $this->getThumbObjects();
+		foreach ($thumbs as $thumbName => $thumbObj) {
+			$urls[$thumbName] = $thumbObj->getUrl();
+
+		}
+
+	$results = [
+		'urls' => $urls, 
+		'avif' => [],
+		'webp' => [] 
+	];
+	
+
+		$webps = $this->getWebps();
+		$avifs = $this->getAvifs(); 
+		
+		$base_url = trailingslashit(str_replace($this->getFileName(), '', $this->getURL()));
+
+		foreach($webps as $webpName => $webpObj)
+		{
+			$results['webp'][$webpName]  =  $base_url . $webpObj->getFileName(); 
+		}
+		foreach($avifs as $avifName => $avifObj)
+		{
+			$results['avif'][$avifName]  = $base_url .  $avifObj->getFileName(); 	 
+		}
+
+
+		return $results;
+	}
+
+	public function getAllFiles()
+	{
+		$urls = array();
+		$urls[$this->mainImageKey] = $this;
+
+
+		if ($this->isScaled())
+		{
+			 $urls[$this->originalImageKey]  = $this->getOriginalFile();
+		}
+
+		$thumbs = $this->getThumbObjects();
+		foreach ($thumbs as $thumbName => $thumbObj) {
+			$urls[$thumbName] = $thumbObj;
+
+		}
+
+	$results = [
+		'files' => $urls, 
+		'avif' => [],
+		'webp' => [] 
+	];
+	
+
+		$webps = $this->getWebps();
+		$avifs = $this->getAvifs(); 
+		
+		//$base_url = trailingslashit(str_replace($this->getFileName(), '', $this->getURL()));
+
+		foreach($webps as $webpName => $webpObj)
+		{
+			$results['webp'][$webpName]  =  $webpObj; 
+		}
+		foreach($avifs as $avifName => $avifObj)
+		{
+			$results['avif'][$avifName]  = $avifObj; 	 
+		}
+
+
+		return $results;	 
 	}
 
 	public function getWPMetaData()
@@ -622,6 +705,7 @@ class MediaLibraryModel extends \ShortPixel\Model\Image\MediaLibraryThumbnailMod
 
 		$compressionType = $this->getMeta('compressionType'); // CompressionType not set on subimages etc.
 
+	
 		// If thumbnails should not be optimized, they should not be in result Array.
 		// #### THUMBNAILS ####
 		$thumbObjs = $this->getThumbObjects();
@@ -1367,8 +1451,7 @@ class MediaLibraryModel extends \ShortPixel\Model\Image\MediaLibraryThumbnailMod
 	/* @param Strict Boolean Check only the main image, don't check thumbnails */
 	public function isProcessable($strict = false)
 	{
-		$bool = true;
-		$bool = parent::isProcessable();
+		$main_bool = $bool = parent::isProcessable();
 
 		$settings = \wpSPIO()->settings();
 
@@ -1403,11 +1486,23 @@ class MediaLibraryModel extends \ShortPixel\Model\Image\MediaLibraryThumbnailMod
 
 				if ($thumbnail->isOptimized() && true === $thumbnail->isProcessableAnyFileType())
 					return true;
+
+				if (false === $bool)
+				{
+					// These statii might in other situations ( i.e wp-cli ) looks processable, but if not warn the user. When the main image is optimized, but thumbnails are prevented somehow it will otherwise return 'image already optimized', which is confusing. 
+					$status = $thumbnail->processable_status; 
+					$warnable_statii = [ImageModel::P_FILE_NOT_EXIST, ImageModel::P_DIRECTORY_NOTWRITABLE, ImageModel::P_BACKUPDIR_NOTWRITABLE, ImageModel::P_FILE_NOTWRITABLE];
+
+					if (in_array($status, $warnable_statii ))
+					{
+						$this->processable_status = $status;
+					}
+				}
 			}
 		}
 
-		// First test if this file isn't unprocessable for any other reason, then check.
-		if (($this->isProcessable(true) || $this->isOptimized()) && $this->isProcessableAnyFileType() === true) {
+		// First test if this file isn't unprocessable for any other reason, then check.  Strict_bool is the result of the main image, and should not be updated / rechecked
+		if ((true === $main_bool || $this->processable_status === ImageModel::P_IS_OPTIMIZED) && $this->isProcessableAnyFileType() === true) {
 			if (false === $this->is_directory_writable()) {
 				$this->processable_status = ImageModel::P_DIRECTORY_NOTWRITABLE;
 				$bool = false;
@@ -1716,7 +1811,6 @@ class MediaLibraryModel extends \ShortPixel\Model\Image\MediaLibraryThumbnailMod
 		}
 
 		$reason = get_post_meta($this->id, '_shortpixel_prevent_optimize', true);
-		//$status = get_post_meta($this->id, '_shortpixel_prevent_optimize_status', true);
 
 		if ($reason === false || strlen($reason) == 0) {
 			$this->optimizePrevented = false;
@@ -1739,6 +1833,22 @@ class MediaLibraryModel extends \ShortPixel\Model\Image\MediaLibraryThumbnailMod
 		foreach ($thumbs as $thumbObj) {
 			if ($thumbObj->isOptimized()) {
 				return true;
+			}
+		}
+		return false;
+	}
+
+	public function getSomethingOptimized()
+	{
+		if ($this->isOptimized())
+		{
+			return $this;
+		}
+
+		$thumbs = $this->getThumbObjects();
+		foreach ($thumbs as $thumbObj) {
+			if ($thumbObj->isOptimized()) {
+				return $thumbObj;
 			}
 		}
 		return false;
