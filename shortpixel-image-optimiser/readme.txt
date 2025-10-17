@@ -4,7 +4,7 @@ Tags: convert webp, optimize images, image optimization, resize, compress images
 Requires at least: 4.8.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 6.3.3
+Stable tag: 6.3.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -473,6 +473,48 @@ Add HTTP basic authentication credentials by defining these constants in wp-conf
 14. Check other optimized images' status - themes or other plugins' images. (Media>Other Media)
 
 == Changelog ==
+
+= 6.3.5 =
+
+🔐 The SmartCrop & Security Fix Update
+
+Release Date: October 16, 2025
+
+🛠️ Fixes & Improvements
+
+* SmartCrop Re-Optimization Fix: The “Re-optimize with/without SmartCrop” feature now correctly follows the selected action instead of always applying the saved setting.
+* AI SEO Preview Credit Message: A clear message is now displayed in the AI SEO preview (from Settings) when you’re out of credits.
+* French Locale Compatibility: Fixed an issue that prevented plugin deactivation when WordPress was set to French due to a language-related error.
+* AI SEO Limits Save Fix: The limits for AI-generated SEO text fields are now properly saved in the settings.
+* Bulk Background Mode Stability: Addressed intermittent failures of background processing in specific cron configurations.
+* Security Fix – Settings Import/Export: Patched a vulnerability that could allow contributor-level users to import/export plugin settings. Thanks to the WordFence team for the responsible disclosure!
+* CDN Link Fix for Inline Backgrounds: Inline background images using single quotes are now correctly replaced with CDN links.
+* Nonce Validation Improvement: Added checks for key form fields to prevent "nonce failed" errors when other plugins modify form data.
+* Inline Background-Image Fix: Ensured that all inline background-image styles end with a semicolon (;) when using the PICTURE tag to deliver next-generation images.
+
+Update now for stronger security, improved SmartCrop behavior, and a smoother image SEO experience! 🚀
+
+= 6.3.4 =
+
+🤖 The Smarter AI Control Update
+
+Release Date: September 18, 2025
+
+✨ New Features & Improvements
+
+* Preserve Existing SEO Data: Added an option to keep your existing ALT, caption, and description fields untouched when using AI-generated image SEO — your manual work is safe!
+* Better Block Editor Integration: AI-generated SEO data and image optimization now work flawlessly when uploading images directly from the block editor.
+* AI Support Chatbot: Meet our new AI-powered support assistant — here to help you faster, 24/7.
+
+🛠️ Fixes & Behavioral Improvements
+
+* Full AI Deactivation: Disabling AI Image SEO now also disables auto-generation and hides all related options from WP Admin, including the Bulk Processing section.
+* EXIF-Based AI Training Block: If AI training is blocked via EXIF data, the plugin now shows a clear message and prevents the image from being sent for processing.
+* Re-Optimize Logic Fixed: The "Re-optimize with/without SmartCrop" buttons now respect the selected option instead of always using the saved setting.
+* Inline Font Handling: Inline fonts will no longer be replaced with CDN links if the CSS option is disabled.
+* AI SEO for Excluded Items: Bulk AI SEO generation now skips excluded items as expected.
+
+Update now for smarter AI behavior, more control over your data, and an improved support experience! 🚀
 
 = 6.3.3 =
 

@@ -26,7 +26,7 @@ class AiController extends RequestManager
 
     public function __construct()
     {
-      $this->main_url = 'https://capi-gpt.shortpixel.com/';
+     $this->main_url = 'https://capi-gpt.shortpixel.com/';
     }
 
     public function processMediaItem(QueueItem $qItem, ImageModel $imageObj)
@@ -143,7 +143,7 @@ class AiController extends RequestManager
 
         if ($qItem->data()->action == 'requestAlt')
         {
-            if (false === $id)
+            if (false === $id && false === $is_error)
             {
                return $this->returnRetry(RequestManager::STATUS_WAITING, __('Response without result object', 'shortpixel-image-optimiser'));
             }
@@ -234,7 +234,27 @@ class AiController extends RequestManager
      */
     protected function handleSuccess($aiData, QueueItem $qItem)
     {
-       
+      if (false === is_null($qItem->data()->returndatalist))
+      {
+         $returndatalist = $qItem->data()->returndatalist; 
+         if (is_object($returndatalist))
+         {
+           $returndatalist = (array) $returndatalist; 
+         }
+
+         foreach($returndatalist as $name => $data)
+         {
+            if (is_object($data)) // annoying conversion somehow by json decode from record
+            {
+               $data = (array) $data; 
+            }
+            if (! isset($aiData[$name]) && isset($data['status']))
+            { 
+                $aiData[$name]  = $data['status']; 
+            }
+         }
+      }
+      
       return $this->returnSuccess(['aiData' => $aiData], RequestManager::STATUS_SUCCESS, __('Retrieved AI image SEO data', 'shortpixel-image-optimiser')); ;
     }
 

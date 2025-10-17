@@ -298,11 +298,11 @@ class CDNController extends \ShortPixel\Controller\Front\PageConverter
 		$checkExtensions = []; 
 		$fonts = ['.ttf', '.woff', '.woff2', '.otf']; 
 
-		if (true == $settings->cdn_js) {
+		if (true === $settings->cdn_js) {
 			$checkExtensions[] = '.js'; 
 			
 		}
-		if (true == $settings->cdn_css)
+		if (true === $settings->cdn_css)
 		{	
 			$checkExtensions[] = '.css'; 
 			$checkExtensions = array_merge($checkExtensions, $fonts);
@@ -352,6 +352,7 @@ class CDNController extends \ShortPixel\Controller\Front\PageConverter
 		$replaceBlocks = $this->filterEmptyURLS($replaceBlocks);
 		$replaceBlocks = $this->filterRegexExclusions($replaceBlocks);
 		$replaceBlocks = $this->filterOtherDomains($replaceBlocks);
+		$replaceBlocks = $this->filterFonts($replaceBlocks);
 
 		if (count($replaceBlocks) > 0) {
 			$replaceBlocks = $this->createReplacements($replaceBlocks);
@@ -359,7 +360,7 @@ class CDNController extends \ShortPixel\Controller\Front\PageConverter
 			$content = $this->pregReplaceContent($content, $replaceBlocks);
 			$background_inline_found = true; 
 		}
-	
+
 		// ** DO IMAGE MATCHES **/
 		$image_matches = $this->fetchImageMatches($content, $args);
 		$replaceBlocks = $this->extractImageMatches($image_matches);
@@ -367,7 +368,6 @@ class CDNController extends \ShortPixel\Controller\Front\PageConverter
 		$replaceBlocks = $this->filterEmptyURLS($replaceBlocks);
 		$replaceBlocks = $this->filterRegexExclusions($replaceBlocks);
 		$replaceBlocks = $this->filterOtherDomains($replaceBlocks);
-
 
 
 		// If the items didn't survive the filters.
@@ -465,6 +465,38 @@ class CDNController extends \ShortPixel\Controller\Front\PageConverter
 			return  $cdn_domain;
 		}
 
+
+	}
+
+	/** The image check on inline CSS might also catch inline fonts.  Check against settings if they should be processed or not. 
+	 * 
+	 * @param mixed $replaceBlocks 
+	 * @return mixed 
+	 */
+	protected function filterFonts($replaceBlocks)
+	{
+		$settings = \wpSPIO()->settings();
+
+		if (true === $settings->cdn_css)
+		{
+			return $replaceBlocks; 
+		}
+
+		$replaceBlocks = array_filter($replaceBlocks, function ($replaceBlock)
+		{
+			 $fonts = ['.ttf', '.woff', '.woff2', '.otf']; 
+			 foreach($fonts as $extcheck)
+			 {
+				  if (strpos($replaceBlock->url, $extcheck) !== false)
+				  {	
+						return false; 
+				  }
+			 }
+			 return true; 
+
+		});
+   
+		return $replaceBlocks;
 
 	}
 
@@ -685,8 +717,20 @@ class CDNController extends \ShortPixel\Controller\Front\PageConverter
 		foreach($replaceBlocks as $replaceBlock)
 		{
 			 $raw_url = $replaceBlock->raw_url; 
+			
+			 // @TODO . Check on Raw_URL if there is " or '  and add that, if none, add none. 
+			 if (true === str_contains($raw_url, '"'))
+			 {
+				$delim = '"'; 
+			 }
+			 elseif (true === str_contains($raw_url, "'"))
+			 {
+				 $delim = "'";
+			 }
+			 else 
+			 	$delim = '';
 			 // Rebuild the matches url: pattern ( easier than $1 getting it back )
-			 $replace_urls[] = 'url(\'' . $replaceBlock->replace_url . '\')'; 
+			 $replace_urls[] = 'url(' . $delim . $replaceBlock->replace_url . $delim . ')'; 
 			 $patterns[] = str_replace('%%replace%%', "" . preg_quote($raw_url, '/') . "", $pattern); 
 
 		}
