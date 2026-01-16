@@ -386,7 +386,7 @@ abstract class ImageModel extends \ShortPixel\Model\File\FileModel
 				 		$message = __('Image is not optimized', 'shortpixel-image-optimiser');
 				 break;
          case self::P_IMAGE_ZERO_SIZE:
-            $message = __('File seems emtpy, or failure on image size', 'shortpixel-image-optimiser');
+            $message = __('File seems empty, or failure on image size', 'shortpixel-image-optimiser');
          break;
          case self::P_EXCLUDE_DATE: 
              $message = __('Date is excluded', 'shortpixel-image-optimiser');
@@ -655,10 +655,19 @@ abstract class ImageModel extends \ShortPixel\Model\File\FileModel
               return null;
 
             if (! $int)
-              return round(100.0 * (1.0 - $optimized / $original), 2);
+            {
+              $number = round(100.0 * (1.0 - $optimized / $original), 2);
+            }
             else
-              return $original - $optimized;
+            {
+              $number =  $original - $optimized;
+            }
 
+            if ($number < 0) // It can be optimized in smaller in some cases with smartcrop etc
+            {
+               return 0; 
+            }
+            return $number;
         }
         else
           return false;
@@ -755,8 +764,16 @@ abstract class ImageModel extends \ShortPixel\Model\File\FileModel
           }
           else
           {
-						$tempFile = $fs->getFile($results['image']['file']);
-
+            if (false === isset($results['image']['file']))
+            {
+               Log::addError('ImageModel:  Result image files not set! Uncaught issue. ', $results['image']);
+               $copyok = false; 
+            }
+            else 
+            {
+                $tempFile = $fs->getFile($results['image']['file']);
+            }
+						
             if ($this->is_virtual())
             {
                 $filepath = apply_filters('shortpixel/file/virtual/translate', $this->getFullPath(), $this);
@@ -766,7 +783,7 @@ abstract class ImageModel extends \ShortPixel\Model\File\FileModel
                 {
                     $virtualFile->delete();
                 }
-                $copyok = $tempFile->copy($virtualFile);
+                $copyok = $tempFile->move($virtualFile);
 
                 // File has been copied to local system, set the path to real to be able to get file and image sizes.
                 if ($copyok)
@@ -774,13 +791,12 @@ abstract class ImageModel extends \ShortPixel\Model\File\FileModel
                   $this->setVirtualToReal($filepath);
                 }
             }
-            else
+            elseif (isset($tempFile))
             {
-                $copyok = $tempFile->copy($this);
+                $optimizedSize  = $tempFile->getFileSize();
+                $copyok = $tempFile->move($this);
+                $this->setImageSize();
             }
-
-             $this->setImageSize();
-             $optimizedSize  = $tempFile->getFileSize();
           } // else
 
           if ($copyok)
@@ -1101,7 +1117,7 @@ abstract class ImageModel extends \ShortPixel\Model\File\FileModel
 
             if (false === $target->exists()) // don't copy if exists.
             {
-							$result = $tempFile->copy($target);
+							$result = $tempFile->move($target);
 						}
             else
 						{
@@ -1139,11 +1155,12 @@ abstract class ImageModel extends \ShortPixel\Model\File\FileModel
                  $target = $fs->getFile((string) $fileDir . $this->getFileName() . '.avif'); // double extension, if exists.
             }
 
-            $result = $tempFile->copy($target);
+            $result = $tempFile->move($target);
             if (! $result)
+            {
               Log::addWarn('Could not copy Avif to destination ' . $target->getFullPath() );
+            }
             return $target;
-      //   }
 
          return false;
     }
